@@ -7,6 +7,11 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/patients', patients.all);
-routes.post('/patients/create', patients.create);
+
+routes.post('/patients/new', patients.new);
+
+routes.get('/patients/:id', patients.show);
+
+routes.put('/patients/:id', patients.edit);
 
 module.exports = routes;

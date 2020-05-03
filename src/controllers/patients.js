@@ -5,7 +5,7 @@ exports.all = function (req, res) {
     res.send(data.patients);
 }
 
-exports.create = function (req, res) {
+exports.new = function (req, res) {
     let id = data.patients.length + 1;
 
     const keys = Object.keys(req.body);
@@ -30,9 +30,60 @@ exports.create = function (req, res) {
 
     fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
         if (err) {
-            throw `Write file error: ${err}`;
+            return res.send(`Write file error: ${err}`);
         }
     });
 
     return res.send(data.patients[id-1]);
+}
+
+exports.show = function (req, res) {
+    const id = req.params.id;
+
+    const foundPatient = data.patients.find(function (patient) {
+        return patient.id == id; 
+    });
+
+    if (!foundPatient) {
+        return res.send('Patient not found!');
+    }
+
+    return res.send(foundPatient);
+}
+
+exports.edit = function (req, res) {
+    const id = req.params.id;
+
+    let index = 0;
+
+    const foundPatient = data.patients.find(function (patient, foundIndex) {
+        if (id == patient.id) {
+            index = foundIndex;
+            return true
+        }
+    });
+
+    if (!foundPatient) {
+        return res.send('Patient not found!');
+    }
+
+    let editedPatient = {
+        ...foundPatient
+    }
+
+    const keys = Object.keys(req.body);
+
+    for(key of keys){
+        editedPatient[key] = req.body[key];
+    }
+
+    data.patients[index] = editedPatient;
+
+    fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
+        if (err) {
+            return res.send(`Write file error: ${err}`);
+        }
+    });
+
+    return res.send(editedPatient);
 }
