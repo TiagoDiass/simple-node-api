@@ -95,3 +95,21 @@ exports.edit = function (req, res) {
 
     return res.send(editedPatient);
 }
+
+exports.delete = function (req, res) {
+    const id = req.params.id;
+
+    const filteredPatients = data.patients.filter(function (patient) {
+        return patient.id == id ? false : true;
+    });
+
+    data.patients = filteredPatients;
+
+    fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
+        if (err) {
+            return res.send(`Write file error: ${err}`);
+        }
+    });
+
+    return res.send(data.patients);
+}
