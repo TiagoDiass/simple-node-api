@@ -6,7 +6,14 @@ exports.all = function (req, res) {
 }
 
 exports.new = function (req, res) {
-    let id = data.patients.length + 1;
+    const patientAmount = data.patients.length;
+    
+    if (patientAmount == 0) {
+        id = 1;
+    } else {
+        let lastUsedId = data.patients[patientAmount - 1].id;
+        id = lastUsedId + 1;
+    }
 
     const keys = Object.keys(req.body);
 
@@ -20,8 +27,9 @@ exports.new = function (req, res) {
         id,
         name: req.body.name, 
         email: req.body.email, 
-        bloodType: req.body.bloodType, 
         age: req.body.age, 
+        gender: req.body.gender,
+        bloodType: req.body.bloodType, 
         weight: req.body.weight, 
         height: req.body.height 
     }
@@ -34,7 +42,7 @@ exports.new = function (req, res) {
         }
     });
 
-    return res.send(data.patients[id-1]);
+    return res.send(newPatient);
 }
 
 exports.show = function (req, res) {

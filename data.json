@@ -19,13 +19,23 @@
       "height": 185
     },
     {
-      "id": 3,
+      "id": 98,
       "name": "Patricia Andrade",
       "email": "patricia@hotmail.com",
       "bloodType": "O+",
       "age": "35",
       "weight": "80",
       "height": "164"
+    },
+    {
+      "id": 99,
+      "name": "Daniel Jonas",
+      "email": "daniel@gmail.com",
+      "age": "8",
+      "gender": "M",
+      "bloodType": "AB+",
+      "weight": "31",
+      "height": "142"
     }
   ]
 }
