@@ -1,115 +1,108 @@
-const fs = require('fs');
-const data = require('../../data.json');
+const fs = require("fs");
+const data = require("../../data.json");
 
 exports.all = function (req, res) {
-    res.send(data.patients);
-}
+  res.send(data.patients);
+};
 
 exports.new = function (req, res) {
-    const patientAmount = data.patients.length;
-    
-    if (patientAmount == 0) {
-        id = 1;
-    } else {
-        let lastUsedId = data.patients[patientAmount - 1].id;
-        id = lastUsedId + 1;
+  const patientAmount = data.patients.length;
+
+  if (patientAmount == 0) {
+    id = 1;
+  } else {
+    let lastUsedId = data.patients[patientAmount - 1].id;
+    id = lastUsedId + 1;
+  }
+
+  let newPatient = {
+    id,
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  console.log(newPatient);
+
+  data.patients.push(newPatient);
+
+  fs.writeFile("data.json", JSON.stringify(data, null, 2), function (err) {
+    if (err) {
+      return res.send(`Write file error: ${err}`);
     }
+  });
 
-    const keys = Object.keys(req.body);
-
-    for(key of keys){
-        if (req.body[key] == '') {
-            return res.send('Please, fill in all required fields');
-        }
-    }
-
-    let newPatient =  { 
-        id,
-        name: req.body.name, 
-        email: req.body.email, 
-        age: req.body.age, 
-        gender: req.body.gender,
-        bloodType: req.body.bloodType, 
-        weight: req.body.weight, 
-        height: req.body.height 
-    }
-
-    data.patients.push(newPatient);
-
-    fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
-        if (err) {
-            return res.send(`Write file error: ${err}`);
-        }
-    });
-
-    return res.send(newPatient);
-}
+  return res.send(newPatient);
+};
 
 exports.show = function (req, res) {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    const foundPatient = data.patients.find(function (patient) {
-        return patient.id == id; 
-    });
+  const foundPatient = data.patients.find(function (patient) {
+    return patient.id == id;
+  });
 
-    if (!foundPatient) {
-        return res.send('Patient not found!');
-    }
+  if (!foundPatient) {
+    return res.status(404).json({ msg: "Patient not found!" });
+  }
 
-    return res.send(foundPatient);
-}
+  return res.send(foundPatient);
+};
 
 exports.edit = function (req, res) {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    let index = 0;
+  let index = 0;
 
-    const foundPatient = data.patients.find(function (patient, foundIndex) {
-        if (id == patient.id) {
-            index = foundIndex;
-            return true
-        }
-    });
-
-    if (!foundPatient) {
-        return res.send('Patient not found!');
+  const foundPatient = data.patients.find(function (patient, foundIndex) {
+    if (id == patient.id) {
+      index = foundIndex;
+      return true;
     }
+  });
 
-    let editedPatient = {
-        ...foundPatient
+  if (!foundPatient) {
+    return res.send("Patient not found!");
+  }
+
+  let editedPatient = {
+    ...foundPatient,
+  };
+
+  const keys = Object.keys(req.body);
+
+  for (key of keys) {
+    editedPatient[key] = req.body[key];
+  }
+
+  data.patients[index] = editedPatient;
+
+  fs.writeFile("data.json", JSON.stringify(data, null, 2), function (err) {
+    if (err) {
+      return res.send(`Write file error: ${err}`);
     }
+  });
 
-    const keys = Object.keys(req.body);
-
-    for(key of keys){
-        editedPatient[key] = req.body[key];
-    }
-
-    data.patients[index] = editedPatient;
-
-    fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
-        if (err) {
-            return res.send(`Write file error: ${err}`);
-        }
-    });
-
-    return res.send(editedPatient);
-}
+  return res.send(editedPatient);
+};
 
 exports.delete = function (req, res) {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    const filteredPatients = data.patients.filter(function (patient) {
-        return patient.id == id ? false : true;
-    });
+  const filteredPatients = data.patients.filter(function (patient) {
+    return patient.id != id;
+  });
 
-    data.patients = filteredPatients;
+  if (filteredPatients.length === data.patients.length) {
+    return res.status(404).json({ message: "Patient not found!" });
+  }
 
-    fs.writeFile('data.json', JSON.stringify(data, null, 2), function (err) {
-        if (err) {
-            return res.send(`Write file error: ${err}`);
-        }
-    });
+  data.patients = filteredPatients;
 
-    return res.send(data.patients);
-}
+  fs.writeFile("data.json", JSON.stringify(data, null, 2), function (err) {
+    if (err) {
+      return res.send(`Write file error: ${err}`);
+    }
+  });
+
+  return res.json({ message: "Successfully deleted" });
+};

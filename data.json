@@ -3,32 +3,22 @@
     {
       "id": 1,
       "name": "Daniel Jonas",
-      "email": "daniel@gmail.com",
-      "age": "8",
-      "gender": "M",
-      "bloodType": "AB+",
-      "weight": "31",
-      "height": "142"
+      "email": "daniel@gmail.com"
     },
     {
       "id": 2,
       "name": "Tiago Dias",
-      "email": "tiagodias@gmail.com",
-      "age": "18",
-      "gender": "M",
-      "bloodType": "A+",
-      "weight": "54",
-      "height": "181"
+      "email": "tiagodias@gmail.com"
     },
     {
       "id": 3,
       "name": "Gabriela Souza",
-      "email": "gabisouza@gmail.com",
-      "age": "21",
-      "gender": "F",
-      "bloodType": "O+",
-      "weight": "55",
-      "height": "171"
+      "email": "gabisouza@gmail.com"
+    },
+    {
+      "id": 4,
+      "name": "Igor Oliveira",
+      "email": "igor@progbr.com.br"
     }
   ]
 }
