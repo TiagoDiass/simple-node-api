@@ -4,7 +4,8 @@
   "description": "API simples feita com o objetivo de praticar Node.js",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "node",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
