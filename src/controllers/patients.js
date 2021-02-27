@@ -51,17 +51,11 @@ exports.show = function (req, res) {
 exports.edit = function (req, res) {
   const id = req.params.id;
 
-  let index = 0;
-
-  const foundPatient = data.patients.find(function (patient, foundIndex) {
-    if (id == patient.id) {
-      index = foundIndex;
-      return true;
-    }
-  });
+  const foundPatient = data.patients.find((patient) => id == patient.id);
+  const index = foundPatient ? data.patients.findIndex((p) => p.id == foundPatient.id) : -1;
 
   if (!foundPatient) {
-    return res.send("Patient not found!");
+    return res.status(404).json({ message: "Patient not found!" });
   }
 
   let editedPatient = {
